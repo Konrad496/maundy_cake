@@ -1,4 +1,20 @@
 import random as rand
+import math as math
+
+class AIPlayer(object):
+
+	# def move(game):
+	# 	number = findSmallestFactor
+	# 	game.cut(board, number, )
+
+	def findSmallestFactor(height):
+		h = math.sqrt(height)
+
+		for i in xrange(2,h):
+			if height%i == 0:
+				return i
+		return height
+
 
 class MaundyGame(object):
 
@@ -44,11 +60,8 @@ class MaundyGame(object):
 if __name__ == '__main__':
 	 
 	game = MaundyGame(6,9)
-	print "represent1"
 	game.represent()
 	game.cut(0,3,False)
-	print "represent2"
-
 	game.represent()
 
 
