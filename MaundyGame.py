@@ -22,32 +22,34 @@ class MaundyGame(object):
 
         if(isLeft):
         	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0] / number, self.board[whichBoard][1])]
+        	print "board", self.board
         	for i in xrange(1, number):
-        		self.board += self.board[whichBoard]
+        		print "self", self.board[whichBoard]
+        		self.board.append(self.board[whichBoard])
         else:
         	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0], self.board[whichBoard][1] / number)]
         	for i in xrange(1, number):
-        		self.board += self.board[whichBoard]
-
-        self.board = self.board + after
+        		self.board.append(self.board[whichBoard])
 
     def represent(self):
-    	print len(self.board)
-    	for i in xrange(0, len(self.board)):
-    		print self.board[i][1]
-    		print self.board[i][0]
- 		# for i in xrange(0,len(self.board)):
- 		# 	for j in xrange(0, self.board[i][1]):
- 		# 		for k in xrange(0, self.board[i][0]):
- 		# 			print "x",
- 		# 		print "\n",
- 		# 	print "\n"
+ 		for i in xrange(0,len(self.board)):
+ 			for j in xrange(0, self.board[i][1]):
+ 				for k in xrange(0, self.board[i][0]):
+ 					print "x",
+ 				print "\n",
+ 			print "\n"
 
 
 
 if __name__ == '__main__':
 	 
-	game = MaundyGame(6,8)
+	game = MaundyGame(6,9)
+	print "represent1"
 	game.represent()
-	game.cut(0,2,True)
-	# game.represent()
+	game.cut(0,3,False)
+	print "represent2"
+
+	game.represent()
+
+
+
