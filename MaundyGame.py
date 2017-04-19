@@ -70,7 +70,7 @@ class MaundyGame(object):
         	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0] / number, self.board[whichBoard][1])]
         	print "board", self.board
         	for i in xrange(1, number):
-        		print "self", self.board[whichBoard]
+        		#print "self", self.board[whichBoard]
         		self.board.append(self.board[whichBoard])
         else:
         	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0], self.board[whichBoard][1] / number)]
@@ -79,7 +79,7 @@ class MaundyGame(object):
 
     def represent(self):
  		for i in xrange(0,len(self.board)):
- 			print "Board " + i + ": "
+ 			print "Board " + str(i) + ": "
  			for j in xrange(0, self.board[i][1]):
  				for k in xrange(0, self.board[i][0]):
  					print "x",
@@ -91,11 +91,13 @@ class MaundyGame(object):
     		for i in xrange(0, len(self.board)):
     			if self.board[i][0] > 1:
     				return False
+    		print "The game is finished! You lost!"
     		return True
     	else:
     		for i in xrange(0, len(self.board)):
     			if self.board[i][1] > 1: 
     				return False
+    		print "The game is finished! You won!"
     		return True
 	def chooseAIBoard(self):
 		for i in xrange(0, len(self.board)):
@@ -105,15 +107,15 @@ class MaundyGame(object):
 
 if __name__ == '__main__':
 	 
-	game.represent()
-	game.cut(0,3,False)
-	game.represent()
+	# game.represent()
+	# game.cut(0,3,False)
+	# game.represent()
 
 	print "Welcome to Maundy Cake!"
 	width = int(raw_input('Please enter a width for the board: '))
 	height = int(raw_input('Please enter a height for the board: '))
 
-	print "The width for your board is " + width + "and the height for your board is " + height + "."
+	print "The width for your board is " + str(width) + " and the height for your board is " + str(height) + "."
 
 	game = MaundyGame(width,height)
 
@@ -122,23 +124,24 @@ if __name__ == '__main__':
 	else:
 		print "The computer will move first."
 
+	while(not(game.checkFinish(game.leftCurrent))):
 
-	while(not(game.checkFinish)):
+		game.represent()
+
 		if(game.leftCurrent):
 
-			game.represent()
-
 			boardNum = int(raw_input('Which board would you like to cut?'))
-			while(boardNum >= len(self.board)):
+			while(boardNum >= len(game.board)):
 				boardNum = int(raw_input('Oh no! Please try again. Which board would you like to cut?'))
 
 			cutNum = int(raw_input('How many pieces would you like to cut the board into?'))
-			while(self.board[boardNum][0]%cutNum != 0 or cutNum == 1):
+			while(game.board[boardNum][0]%cutNum != 0 or cutNum == 1):
 				cutNum = int(raw_input('Oh no! Please try again. How many pieces would you like to cut the board into?'))
 
 			game.cut(boardNum, cutNum, True)
 
 		else:
+			print "something"
 
 
 		game.leftCurrent = not(game.leftCurrent)
