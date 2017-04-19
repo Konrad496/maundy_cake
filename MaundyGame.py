@@ -1,29 +1,50 @@
 import random as rand
 import math as math
 
-class AIPlayer(object):
 
 	# def move(game):
 	# 	number = findSmallestFactor
 	# 	game.cut(board, number, )
 
-	def findAIMove(height):
-		if(isPrime(height)):
-			return height
-
-		for i in range(height, 2, -1):
-			if(isPrime(i) and height%i == 0):
-				return i
-
-	def isPrime(number):
-
-		h = math.ceil(math.sqrt(number))
-
-		for i in xrange(2,h):
-			if height%i == 0:
-				return i
+def findAIMove(height):
+	if(isPrime(height)):
 		return height
 
+	for i in range(height, 2, -1):
+		if(isPrime(i) and height%i == 0):
+			return i
+def findSmallestFactor(number):
+
+	h = math.ceil(math.sqrt(number))
+
+	for i in xrange(2,h):
+		if number%i == 0:
+			return i
+	return number
+def isPrime(aNumber):
+	h = math.ceil(math.sqrt(aNumber))
+	
+	for i in xrange(2, h):
+		if aNumber%i == 0:
+			return False
+	return True
+
+def getBoardValue(aPair):
+	width = aPair[0]
+	height = aPair[1]
+	while(width != 1 and height != 1):
+		width /= findSmallestFactor(width)
+		height /= findSmallestFactor(height)
+	if(width == 1 and height == 1):
+		return 0
+	isPositive = height == 1
+	total = 0
+	if(not(isPositive)):
+		height = width
+		width = 1
+	while(height != 1):
+		total += height /= findSmallestFactor(height)
+	return total
 
 class MaundyGame(object):
 
@@ -76,7 +97,11 @@ class MaundyGame(object):
     			if self.board[i][1] > 1: 
     				return False
     		return True
-
+	def chooseAIBoard(self):
+		for i in xrange(0, len(self.board)):
+			if(getBoardValue(self.board[i]) < 0):
+				return i
+		return len(self.board)
 
 if __name__ == '__main__':
 	 
