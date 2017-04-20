@@ -10,7 +10,7 @@ def findAIMove(height):
 	if(isPrime(height)):
 		return height
 
-	for i in range(height, 2, -1):
+	for i in range(height, 1, -1):
 		if(isPrime(i) and height%i == 0):
 			return i
 
@@ -45,7 +45,6 @@ def getBoardValue(aPair):
 		width = height
 		height = 1
 	while(width != 1):
-		print "width", width
 		width = width/findSmallestFactor(width)
 		total += width
 	if (isPositive):
@@ -55,67 +54,65 @@ def getBoardValue(aPair):
 
 class MaundyGame(object):
 
-	def __init__(self, startWidth, startHeight):
-    	self.leftCurrent = (rand.randint(0,1) == 1)
+    def __init__(self, startWidth, startHeight):
+        self.leftCurrent = (rand.randint(0,1) == 1)
         self.board = [(startWidth, startHeight)]
-        #self.left = HumanPlayer()
-        #self.right = AIPlayer()
 
     # whichBoard is the index of list, gameboard to be cut
 
     def cut(self, whichBoard, number, isLeft):
         desiredBoard = self.board[whichBoard]
 
-        if((isLeft and desiredBoard[0] % number != 0) or
-           (not(isLeft) and desiredBoard[1] % number != 0)):
-        	print "error"
-        	return
+        if((isLeft and (desiredBoard[0] % number) != 0) or
+        (not(isLeft) and (desiredBoard[1] % number) != 0)):
+            print "error"
+            return
 
-        after = self.board[whichBoard:]
+        after = self.board[(whichBoard+1):]
 
         if(isLeft):
-        	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0] / number, self.board[whichBoard][1])]
-        	print "board", self.board
-        	for i in xrange(1, number):
-        		#print "self", self.board[whichBoard]
-        		self.board.append(self.board[whichBoard])
+            self.board = self.board[:whichBoard] + [(self.board[whichBoard][0] / number, self.board[whichBoard][1])]
+            for i in xrange(1, number):
+                #print "self", self.board[whichBoard]
+                self.board.append(self.board[whichBoard])
         else:
-        	self.board = self.board[:whichBoard] + [(self.board[whichBoard][0], self.board[whichBoard][1] / number)]
-        	for i in xrange(1, number):
-        		self.board.append(self.board[whichBoard])
+            self.board = self.board[:whichBoard] + [(self.board[whichBoard][0], self.board[whichBoard][1] / number)]
+            for i in xrange(1, number):
+                self.board.append(self.board[whichBoard])
+        self.board += after
 
     def represent(self):
- 		for i in xrange(0,len(self.board)):
- 			print "Board " + str(i) + ": "
- 			for j in xrange(0, self.board[i][1]):
- 				for k in xrange(0, self.board[i][0]):
- 					print "x",
- 				print "\n",
- 			print "\n"
+        for i in xrange(0,len(self.board)):
+            print "Board " + str(i) + ": "
+            for j in xrange(0, self.board[i][1]):
+                for k in xrange(0, self.board[i][0]):
+        	       print "x",
+                print "\n",
+            print "\n"
 
- 	def chooseAIBoard(self):
- 		for i in xrange(0, len(self.board)):
-			if(getBoardValue(self.board[i]) < 0):
-				return i
-		for i in xrange(0, len(self.board)):
-			if(self.board[i][1] > 1):
-				return i
-		print "ERROR :("
-		return -1
+    def chooseAIBoard(self):
+        for i in xrange(0, len(self.board)):
+            if(getBoardValue(self.board[i]) < 0):
+                return i
+        for i in xrange(0, len(self.board)):
+            if(self.board[i][1] > 1):
+                return i
+        print "ERROR :("
+        return -1
 
     def checkFinish(self, isLeft):
-    	if(isLeft): 
-    		for i in xrange(0, len(self.board)):
-    			if self.board[i][0] > 1:
-    				return False
-    		print "The game is finished! You lost!"
-    		return True
-    	else:
-    		for i in xrange(0, len(self.board)):
-    			if self.board[i][1] > 1: 
-    				return False
-    		print "The game is finished! You won!"
-    		return True
+        if(isLeft): 
+            for i in xrange(0, len(self.board)):
+                if self.board[i][0] > 1:
+                    return False
+            print "The game is finished! You lost!"
+            return True
+        else:
+            for i in xrange(0, len(self.board)):
+                if self.board[i][1] > 1: 
+                    return False
+        print "The game is finished! You won!"
+        return True
 
 
 if __name__ == '__main__':
@@ -157,7 +154,7 @@ if __name__ == '__main__':
 
 		else:
 			boardNum = game.chooseAIBoard()
-			cutNum = findAIMove(self.board[boardNum][1])
+			cutNum = findAIMove(game.board[boardNum][1])
 			game.cut(boardNum, cutNum, False)
 			print "The computer cuts board " + str(boardNum) + " into " + str(cutNum) + " pieces."
 
