@@ -13,16 +13,18 @@ def findAIMove(height):
 	for i in range(height, 2, -1):
 		if(isPrime(i) and height%i == 0):
 			return i
+
 def findSmallestFactor(number):
 
-	h = math.ceil(math.sqrt(number))
+	h = int(math.floor(math.sqrt(number))+1)
 
 	for i in xrange(2,h):
 		if number%i == 0:
 			return i
 	return number
+
 def isPrime(aNumber):
-	h = math.ceil(math.sqrt(aNumber))
+	h = int(math.floor(math.sqrt(aNumber))+1)
 	
 	for i in xrange(2, h):
 		if aNumber%i == 0:
@@ -37,18 +39,23 @@ def getBoardValue(aPair):
 		height /= findSmallestFactor(height)
 	if(width == 1 and height == 1):
 		return 0
-	isPositive = height == 1
+	isPositive = (height == 1)
 	total = 0
 	if(not(isPositive)):
-		height = width
-		width = 1
-	while(height != 1):
-		total += height /= findSmallestFactor(height)
-	return total
+		width = height
+		height = 1
+	while(width != 1):
+		print "width", width
+		width = width/findSmallestFactor(width)
+		total += width
+	if (isPositive):
+		return total
+	else:
+		return 0-total
 
 class MaundyGame(object):
 
-    def __init__(self, startWidth, startHeight):
+	def __init__(self, startWidth, startHeight):
     	self.leftCurrent = (rand.randint(0,1) == 1)
         self.board = [(startWidth, startHeight)]
         #self.left = HumanPlayer()
@@ -86,6 +93,16 @@ class MaundyGame(object):
  				print "\n",
  			print "\n"
 
+ 	def chooseAIBoard(self):
+ 		for i in xrange(0, len(self.board)):
+			if(getBoardValue(self.board[i]) < 0):
+				return i
+		for i in xrange(0, len(self.board)):
+			if(self.board[i][1] > 1):
+				return i
+		print "ERROR :("
+		return -1
+
     def checkFinish(self, isLeft):
     	if(isLeft): 
     		for i in xrange(0, len(self.board)):
@@ -99,17 +116,14 @@ class MaundyGame(object):
     				return False
     		print "The game is finished! You won!"
     		return True
-	def chooseAIBoard(self):
-		for i in xrange(0, len(self.board)):
-			if(getBoardValue(self.board[i]) < 0):
-				return i
-		return len(self.board)
+
 
 if __name__ == '__main__':
 	 
 	# game.represent()
 	# game.cut(0,3,False)
 	# game.represent()
+
 
 	print "Welcome to Maundy Cake!"
 	width = int(raw_input('Please enter a width for the board: '))
@@ -118,6 +132,7 @@ if __name__ == '__main__':
 	print "The width for your board is " + str(width) + " and the height for your board is " + str(height) + "."
 
 	game = MaundyGame(width,height)
+
 
 	if(game.leftCurrent):
 		print "Your move!"
@@ -130,18 +145,21 @@ if __name__ == '__main__':
 
 		if(game.leftCurrent):
 
-			boardNum = int(raw_input('Which board would you like to cut?'))
-			while(boardNum >= len(game.board)):
-				boardNum = int(raw_input('Oh no! Please try again. Which board would you like to cut?'))
+			boardNum = int(raw_input('Which board would you like to cut? '))
+			while(boardNum >= len(game.board) or game.board[boardNum][0] <= 1):
+				boardNum = int(raw_input('Oh no! Please try again. Which board would you like to cut? '))
 
-			cutNum = int(raw_input('How many pieces would you like to cut the board into?'))
+			cutNum = int(raw_input('How many pieces would you like to cut the board into? '))
 			while(game.board[boardNum][0]%cutNum != 0 or cutNum == 1):
-				cutNum = int(raw_input('Oh no! Please try again. How many pieces would you like to cut the board into?'))
+				cutNum = int(raw_input('Oh no! Please try again. How many pieces would you like to cut the board into? '))
 
 			game.cut(boardNum, cutNum, True)
 
 		else:
-			print "something"
+			boardNum = game.chooseAIBoard()
+			cutNum = findAIMove(self.board[boardNum][1])
+			game.cut(boardNum, cutNum, False)
+			print "The computer cuts board " + str(boardNum) + " into " + str(cutNum) + " pieces."
 
 
 		game.leftCurrent = not(game.leftCurrent)
